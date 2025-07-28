@@ -117,3 +117,21 @@ mark {
   background: #fff89a;
   font-weight: bold;
 }
+
+.status-controls {
+  margin-top: 8px;
+  font-size: 0.9em;
+}
+.status-controls label {
+  margin-right: 10px;
+  cursor: pointer;
+}
+.entry.status-sanskaryam {
+  background-color: #fff3cd;
+}
+.entry.status-samikshyam {
+  background-color: #cce5ff;
+}
+.entry.status-siddham {
+  background-color: #d4edda;
+}

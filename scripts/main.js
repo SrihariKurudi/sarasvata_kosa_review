@@ -20,6 +20,7 @@ async function init() {
 
 async function loadSheet(url) {
   try {
+    await loadStatuses();  // 👈 Load status info first
     const rows = await getSheetData(url);
     renderEntries(rows);
   } catch (err) {
@@ -28,5 +29,6 @@ async function loadSheet(url) {
       "<p style='color:red;'>❌ Failed to load data. Check sheet visibility or format.</p>";
   }
 }
+
 
 init();
