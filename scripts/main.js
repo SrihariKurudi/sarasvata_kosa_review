@@ -31,5 +31,3 @@ async function loadSheet(url) {
 }
 
 loadSheet(SHEET_URL);
-
-init();
