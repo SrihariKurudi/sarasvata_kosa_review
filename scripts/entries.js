@@ -33,7 +33,7 @@ function colorCodeEntry(id, status) {
   if (status === "सिद्धम्") el.classList.add("status-siddham");
 }
 
-export function renderEntries(data) {
+function renderEntries(data) {
   const wrap = document.getElementById('dictionary');
   wrap.innerHTML = '';
 
@@ -93,3 +93,6 @@ export function renderEntries(data) {
     wrap.appendChild(div);
   }
 }
+
+export { renderEntries, loadStatuses };
+
