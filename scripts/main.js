@@ -22,6 +22,7 @@ async function loadSheet(url) {
   try {
     await loadStatuses();
     const rows = await getSheetData(url); // ✅ FIXED here
+    console.log("Fetched rows:", rows);
     renderEntries(rows);
   } catch (err) {
     console.error('❌ Fetch error:', err);
