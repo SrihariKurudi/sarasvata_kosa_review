@@ -14,8 +14,8 @@ async function updateStatus(id, status) {
   try {
     await fetch(STATUS_API_URL, {
       method: "POST",
-      body: JSON.stringify({ id, status }),
-      headers: { "Content-Type": "application/json" },
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: `word=${encodeURIComponent(word)}&status=${encodeURIComponent(status)}`
     });
     entryStatuses[id] = status;
     colorCodeEntry(id, status);
