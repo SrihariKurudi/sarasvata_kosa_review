@@ -82,3 +82,5 @@ export function renderEntries(rows) {
     container.appendChild(div);
   });
 }
+
+export { renderEntries, loadStatuses };
