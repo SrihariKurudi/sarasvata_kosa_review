@@ -14,3 +14,5 @@ export async function getSheetData(url) {
     return obj;
   });
 }
+
+export { loadFromSheet };
