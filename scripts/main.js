@@ -29,5 +29,3 @@ async function loadSheet(url) {
       "<p style='color:red;'>❌ Failed to load data. Check sheet visibility or format.</p>";
   }
 }
-
-
