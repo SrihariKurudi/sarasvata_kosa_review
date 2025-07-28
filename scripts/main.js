@@ -4,7 +4,7 @@ import { getSheetData }    from './data.js';
 import { renderEntries, loadStatuses } from './entries.js';
 import { filterEntries }   from './search.js';
 import { adjustNavbar }    from './ui.js';
-import { loadFromSheet, sheetConfig } from './data.js';
+import { loadFromSheet }   from './data.js';  // ✅ Fixed
 
 /* --- bootstrap ---------------------------------------------------------- */
 
