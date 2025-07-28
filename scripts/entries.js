@@ -1,101 +1,84 @@
-const STATUS_API_URL = "https://script.google.com/macros/s/AKfycbzrm3SByO_yBjjbxu8nG_SJLcZzW5jld3ta2i5Zq8Bk04PZq5W5A7Uq0NVVahcs4Zu65w/exec";
-let entryStatuses = {};
+const STATUS_API_URL = 'https://script.google.com/macros/s/AKfycbzrm3SByO_yBjjbxu8nG_SJLcZzW5jld3ta2i5Zq8Bk04PZq5W5A7Uq0NVVahcs4Zu65w/exec';
+const entryStatuses = {};
 
 async function loadStatuses() {
   try {
-    const res = await fetch(STATUS_API_URL);
-    entryStatuses = await res.json();
+    const response = await fetch(STATUS_API_URL);
+    const data = await response.json(); // assumes sheet returns JSON
+    data.forEach(row => {
+      const word = row[0];
+      const status = row[1];
+      entryStatuses[word] = status;
+    });
   } catch (e) {
-    console.error("Failed to load statuses:", e);
+    console.error('❌ Failed to load review statuses:', e);
   }
 }
 
 function updateStatus(id, word, status) {
   const url = `${STATUS_API_URL}?word=${encodeURIComponent(word)}&status=${encodeURIComponent(status)}`;
-
   fetch(url)
     .then(res => res.text())
     .then(result => {
-      console.log("✅ Status update successful:", result);
-      entryStatuses[id] = status;
+      console.log('✅ Status update successful:', result);
+      entryStatuses[word] = status;
       colorCodeEntry(id, status);
     })
     .catch(err => {
-      console.error("❌ Failed to update status:", err);
+      console.error('❌ Failed to update status:', err);
     });
 }
-
-
 
 function colorCodeEntry(id, status) {
-  const el = document.querySelector(`[data-entry-id="${id}"]`);
-  if (!el) return;
-  el.classList.remove("status-sanskaryam", "status-samikshyam", "status-siddham");
-  if (status === "संस्कार्यम्") el.classList.add("status-sanskaryam");
-  if (status === "समीक्ष्यम्") el.classList.add("status-samikshyam");
-  if (status === "सिद्धम्") el.classList.add("status-siddham");
-}
-
-function renderEntries(data) {
-  const wrap = document.getElementById('dictionary');
-  wrap.innerHTML = '';
-
-  const grouped = data.reduce((acc, row) => {
-    const key = row["आङ्ग्लपदम्"]?.trim();
-    if (key) (acc[key] ??= []).push(row);
-    return acc;
-  }, {});
-
-  for (const [headword, group] of Object.entries(grouped)) {
-    const div = document.createElement('div');
-    const id = headword;
-    const currentStatus = entryStatuses[id] || "";
-
-    div.className = 'entry';
-    div.setAttribute("data-entry-id", id);
-    div.innerHTML = `<div class="headword">${headword}</div>`;
-
-    group.forEach((row, i) => {
-      const sanskrit = (row["संस्कृतपदम्"] || '').replace(/\n/g, '<br>');
-      const notes    = (row["टिप्पणं/पदान्तरङ्गम्"] || '').replace(/\n/g, '<br>');
-      const example  = (row["उदाहरणवाक्यम्"]      || '').replace(/\n/g, '<br>');
-
-      const statusButtons = `
-        <div class="status-controls">
-          <label><input type="radio" name="status-${id}" value="संस्कार्यम्" ${currentStatus === "संस्कार्यम्" ? "checked" : ""}> संस्कार्यम्</label>
-          <label><input type="radio" name="status-${id}" value="समीक्ष्यम्" ${currentStatus === "समीक्ष्यम्" ? "checked" : ""}> समीक्ष्यम्</label>
-          <label><input type="radio" name="status-${id}" value="सिद्धम्" ${currentStatus === "सिद्धम्" ? "checked" : ""}> सिद्धम्</label>
-        </div>
-      `;
-
-      div.innerHTML += `
-        <div class="entry-content">
-          <div class="entry-text">
-            <div class="sanskrit">${sanskrit}</div>
-            ${notes ? `<div><b>📘 पदान्तरङ्गम्</b><div class="notes">${notes}</div></div>` : ''}
-            ${example ? `<div><b>📝 उदाहरणम्</b><div class="example"><i>${example}</i></div></div>` : ''}
-            ${statusButtons}
-          </div>
-        </div>
-        ${i < group.length - 1 ? '<hr>' : ''}
-      `;
-    });
-
-    setTimeout(() => {
-      div.querySelectorAll(`input[name="status-${id}"]`).forEach(radio => {
-        radio.addEventListener("change", (e) => {
-          updateStatus(entryId, row[0], input.value);
-        });
-      });
-      if (currentStatus) colorCodeEntry(id, currentStatus);
-      div.querySelectorAll('.headword,.sanskrit,.notes,.example').forEach(el => {
-        el.dataset.raw = el.innerHTML;
-      });
-    });
-
-    wrap.appendChild(div);
+  const colors = {
+    'संस्कार्यम्': '#ffeeba',
+    'समीक्ष्यम्': '#bee5eb',
+    'सिद्धम्': '#d4edda'
+  };
+  const entryDiv = document.getElementById(id);
+  if (entryDiv) {
+    entryDiv.style.backgroundColor = colors[status] || 'transparent';
   }
 }
 
-export { renderEntries, loadStatuses };
+export function renderEntries(rows) {
+  const container = document.getElementById('dictionary');
+  container.innerHTML = '';
+  rows.forEach((row, i) => {
+    const id = `entry-${i}`;
+    const word = row[0];
+    const div = document.createElement('div');
+    div.className = 'entry';
+    div.id = id;
 
+    const wordEl = document.createElement('h3');
+    wordEl.textContent = word;
+    div.appendChild(wordEl);
+
+    const defEl = document.createElement('p');
+    defEl.textContent = row.slice(1).join(' — ');
+    div.appendChild(defEl);
+
+    const status = entryStatuses[word];
+    if (status) colorCodeEntry(id, status);
+
+    const statusContainer = document.createElement('div');
+    statusContainer.className = 'status-radio';
+
+    ['संस्कार्यम्', 'समीक्ष्यम्', 'सिद्धम्'].forEach(opt => {
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = `status-${id}`;
+      input.value = opt;
+      if (status === opt) input.checked = true;
+      input.onclick = () => updateStatus(id, word, input.value);
+      label.appendChild(input);
+      label.append(` ${opt} `);
+      statusContainer.appendChild(label);
+    });
+
+    div.appendChild(statusContainer);
+    container.appendChild(div);
+  });
+}
