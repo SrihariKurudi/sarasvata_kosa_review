@@ -1,3 +1,5 @@
+console.log("✅ main.js loaded");
+
 import { sheetConfig }     from './config.js';
 import { renderTabs }      from './tabs.js';
 import { getSheetData }    from './data.js';
