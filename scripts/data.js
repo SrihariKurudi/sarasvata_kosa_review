@@ -15,4 +15,3 @@ export async function getSheetData(url) {
   });
 }
 
-export { loadFromSheet };

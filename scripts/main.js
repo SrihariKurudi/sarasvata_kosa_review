@@ -4,7 +4,7 @@ import { getSheetData }    from './data.js';
 import { renderEntries, loadStatuses } from './entries.js';
 import { filterEntries }   from './search.js';
 import { adjustNavbar }    from './ui.js';
-import { loadFromSheet }   from './data.js';  // ✅ Fixed
+import { getSheetData }   from './data.js';  // ✅ Fixed
 
 /* --- bootstrap ---------------------------------------------------------- */
 
@@ -22,7 +22,7 @@ async function init() {
 async function loadSheet(url) {
   try {
     await loadStatuses();
-    const rows = await loadFromSheet(url); // ✅ FIXED here
+    const rows = await getSheetData(url); // ✅ FIXED here
     renderEntries(rows);
   } catch (err) {
     console.error('❌ Fetch error:', err);
