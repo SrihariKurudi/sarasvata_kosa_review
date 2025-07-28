@@ -1,0 +1,119 @@
+body {
+  margin: 0;
+  font-family: 'Roboto Mono', monospace;
+  background: #fdfaf1;
+  padding-top: 100px;
+}
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  background-color: #FDF6D3;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 0.5em 1em;
+  flex-direction: row;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+  flex-wrap: wrap;
+}
+header > div {
+  flex: 1;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  flex: 1;
+}
+.header-left img {
+  height: 50px;
+}
+.site-title {
+  font-size: 1.8em;
+  color: #8B4513;
+  font-family: 'Noto Serif Devanagari', serif;
+}
+.header-center {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5em;
+  flex: 2;
+}
+header.compact .site-title {
+  font-size: 1.6em;
+}
+header.compact img {
+  height: 40px;
+}
+#searchBox {
+  padding: 0.5em 1em;
+  font-size: 1em;
+  font-family: 'Noto Serif Devanagari', serif;
+  width: 160px;
+  margin: 0.3em 0;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background: #fff8dc;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+.tabs {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5em;
+  flex-wrap: wrap;
+  margin: 0;
+  padding-bottom: 0.3em;
+  max-width: 800px;
+}
+.tab-btn {
+  padding: 0.4em 0.8em;
+  background-color: #eee6ba;
+  color: #4e2c0a;
+  border: 1px solid #e1d7ab;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Noto Serif Devanagari', serif;
+  font-size: large;
+}
+.tab-btn.active {
+  background-color: #8B4513;
+  color: white;
+}
+.entry {
+  background: white;
+  margin: 1em auto;
+  padding: 1em;
+  border-left: 5px solid #8B4513;
+  border-radius: 8px;
+  max-width: 800px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.headword {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #4e2c0a;
+}
+.sanskrit {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #083b6d;
+  margin-top: 0.4em;
+  font-family: 'Noto Serif Devanagari', serif;
+}
+.notes, .example {
+  padding-left: 2em;
+  margin-top: 0.5em;
+  line-height: 1.5;
+  font-family: 'Noto Serif Devanagari', serif;
+}
+mark {
+  background: #fff89a;
+  font-weight: bold;
+}
