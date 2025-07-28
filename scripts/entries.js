@@ -83,4 +83,4 @@ export function renderEntries(rows) {
   });
 }
 
-export { renderEntries, loadStatuses };
+export { loadStatuses };
