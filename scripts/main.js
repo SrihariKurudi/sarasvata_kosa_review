@@ -30,5 +30,9 @@ async function loadSheet(url) {
   }
 }
 
+async function init() {
+  await loadStatuses();
+  loadSheet(SHEET_URL);
+}
 
 init();
