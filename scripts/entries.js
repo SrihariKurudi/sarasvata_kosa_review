@@ -10,19 +10,23 @@ async function loadStatuses() {
   }
 }
 
-async function updateStatus(id, status) {
-  try {
-    await fetch(STATUS_API_URL, {
-      method: "POST",
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `word=${encodeURIComponent(word)}&status=${encodeURIComponent(status)}`
+function updateStatus(id, status) {
+  const word = document.getElementById(id).querySelector(".main-word").textContent.trim();
+
+  const url = `${STATUS_API_URL}?word=${encodeURIComponent(word)}&status=${encodeURIComponent(status)}`;
+
+  fetch(url)
+    .then(res => res.text())
+    .then(result => {
+      console.log("✅ Status update successful:", result);
+      entryStatuses[id] = status;
+      colorCodeEntry(id, status);
+    })
+    .catch(err => {
+      console.error("❌ Failed to update status:", err);
     });
-    entryStatuses[id] = status;
-    colorCodeEntry(id, status);
-  } catch (e) {
-    console.error("Failed to update status:", e);
-  }
 }
+
 
 function colorCodeEntry(id, status) {
   const el = document.querySelector(`[data-entry-id="${id}"]`);
