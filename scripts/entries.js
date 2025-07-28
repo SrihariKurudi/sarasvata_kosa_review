@@ -10,9 +10,7 @@ async function loadStatuses() {
   }
 }
 
-function updateStatus(id, status) {
-  const word = document.getElementById(id).querySelector(".main-word").textContent.trim();
-
+function updateStatus(id, word, status) {
   const url = `${STATUS_API_URL}?word=${encodeURIComponent(word)}&status=${encodeURIComponent(status)}`;
 
   fetch(url)
@@ -26,6 +24,7 @@ function updateStatus(id, status) {
       console.error("❌ Failed to update status:", err);
     });
 }
+
 
 
 function colorCodeEntry(id, status) {
@@ -85,7 +84,7 @@ function renderEntries(data) {
     setTimeout(() => {
       div.querySelectorAll(`input[name="status-${id}"]`).forEach(radio => {
         radio.addEventListener("change", (e) => {
-          updateStatus(id, e.target.value);
+          updateStatus(entryId, row[0], input.value);
         });
       });
       if (currentStatus) colorCodeEntry(id, currentStatus);
