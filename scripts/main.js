@@ -6,6 +6,15 @@ import { getSheetData }    from './data.js';
 import { renderEntries, loadStatuses } from './entries.js';
 import { filterEntries }   from './search.js';
 import { adjustNavbar }    from './ui.js';
+import { supabase } from './supabaseClient.js'
+
+
+const supabaseUrl = "https://elvtvoqhzlotjqtqldqx.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsdnR2b3FoemxvdGpxdHJsZHF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM3Njg2MTUsImV4cCI6MjA2OTM0NDYxNX0.wxfW_8GX8wHg_DTMG-uU4BP-j81hUN2j9aFZ-e2pdWs";
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+const { data, error } = await supabase.from('review_status').select('*')
+
 
 /* --- bootstrap ---------------------------------------------------------- */
 
@@ -34,11 +43,6 @@ async function loadSheet(url) {
 }
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-// Replace with your actual keys
-const supabaseUrl = 'https://your-project-url.supabase.co'
-const supabaseKey = 'your-anon-key'
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 async function fetchEntries() {
   const { data, error } = await supabase.from('entries').select('*')
