@@ -47,12 +47,13 @@ export function renderEntries(rows) {
   container.innerHTML = '';
 
   rows.forEach((row, i) => {
-    if (!row || !row.c || !row.c[0]) return;
+    if (!row || !row.c) return;
 
     const id = `entry-${i}`;
-    const word = row.c[0].v || '';
+    const word = row.c[0]?.v?.toLowerCase?.() || '';  // lowercase to match status keys
     const defParts = row.c.slice(1).map(cell => cell?.v || '');
-    const existingStatus = entryStatuses[word];
+
+    if (!word) return; // skip empty words
 
     const div = document.createElement('div');
     div.className = 'entry';
@@ -75,7 +76,7 @@ export function renderEntries(rows) {
       input.type = 'radio';
       input.name = `status-${id}`;
       input.value = opt;
-      if (existingStatus === opt) input.checked = true;
+      if (entryStatuses[word] === opt) input.checked = true;
       input.onclick = () => updateStatus(id, word, opt);
       label.appendChild(input);
       label.append(` ${opt} `);
@@ -83,7 +84,7 @@ export function renderEntries(rows) {
     });
 
     div.appendChild(statusBox);
-    colorCodeEntry(id, existingStatus);
+    colorCodeEntry(id, entryStatuses[word]);
     container.appendChild(div);
   });
 }
