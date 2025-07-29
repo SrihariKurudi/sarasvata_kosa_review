@@ -4,18 +4,18 @@ const entryStatuses = {};
 async function loadStatuses() {
   try {
     const raw = await fetch(STATUS_API_URL).then(r => r.json());
-    console.log("🔍 Raw status response:", raw);  // 👈 ADD THIS LINE
+    console.log("🔍 Raw status response:", raw);
 
-    const data = raw.data || raw;
-    data.forEach(row => {
-      const word = row[0];
-      const status = row[1];
+    Object.entries(raw).forEach(([word, status]) => {
       entryStatuses[word] = status;
     });
+
+    console.log("✅ Loaded statuses:", entryStatuses);
   } catch (e) {
     console.error('❌ Failed to load review statuses:', e);
   }
 }
+
 
 
 function updateStatus(entryId, word, status) {
