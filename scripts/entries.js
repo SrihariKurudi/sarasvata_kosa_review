@@ -47,13 +47,13 @@ export function renderEntries(rows) {
   container.innerHTML = '';
 
   rows.forEach((row, i) => {
-    if (!row || !row.c) return;
-
     const id = `entry-${i}`;
-    const word = row.c[0]?.v?.toLowerCase?.() || '';  // lowercase to match status keys
-    const defParts = row.c.slice(1).map(cell => cell?.v || '');
+    const word = row["आङ्ग्लपदम्"]?.toLowerCase();
+    const sanskrit = row["संस्कृतपदम्"] || '';
+    const notes = row["टिप्पणं/पदान्तरङ्गम्"] || '';
+    const example = row["उदाहरणवाक्यम्"] || '';
 
-    if (!word) return; // skip empty words
+    if (!word) return;
 
     const div = document.createElement('div');
     div.className = 'entry';
@@ -64,7 +64,11 @@ export function renderEntries(rows) {
     div.appendChild(title);
 
     const body = document.createElement('p');
-    body.textContent = defParts.join(' — ');
+    body.innerHTML = `
+      <b>संस्कृतपदम्:</b> ${sanskrit}<br>
+      <b>टिप्पणं:</b> ${notes}<br>
+      <b>उदाहरणवाक्यम्:</b> ${example}
+    `;
     div.appendChild(body);
 
     const statusBox = document.createElement('div');
@@ -88,5 +92,6 @@ export function renderEntries(rows) {
     container.appendChild(div);
   });
 }
+
 
 export { loadStatuses };
