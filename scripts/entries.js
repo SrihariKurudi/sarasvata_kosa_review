@@ -18,29 +18,34 @@ async function loadStatuses() {
 
 
 
-function updateStatus(entryId, word, status) {
-  const url = `${STATUS_API_URL}?word=${encodeURIComponent(word)}&status=${encodeURIComponent(status)}`;
-  fetch(url)
-    .then(res => res.text())
-    .then(result => {
-      console.log('✅ Status updated:', result);
-      entryStatuses[word] = status;
-      colorCodeEntry(entryId, status);
-    })
-    .catch(err => {
-      console.error('❌ Failed to update status:', err);
+async function updateStatus(id, word, status) {
+  try {
+    await fetch(STATUS_API_URL, {
+      method: "POST",
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `word=${encodeURIComponent(word)}&status=${encodeURIComponent(status)}`
     });
+
+    entryStatuses[word] = status;
+    colorCodeEntry(id, status);
+  } catch (e) {
+    console.error("Failed to update status:", e);
+  }
 }
 
-function colorCodeEntry(entryId, status) {
-  const colors = {
-    'संस्कार्यम्': '#ffeeba',
-    'समीक्ष्यम्': '#bee5eb',
-    'सिद्धम्':    '#d4edda'
-  };
-  const block = document.getElementById(entryId);
-  if (block) block.style.backgroundColor = colors[status] || 'transparent';
+
+function colorCodeEntry(id, status) {
+  const div = document.getElementById(id);
+  if (!div) return;
+
+  let color = "#eee";
+  if (status === "संस्कार्यम्") color = "#ffcccc"; // red
+  else if (status === "समीक्ष्यम्") color = "#fff9cc"; // yellow
+  else if (status === "सिद्धम्") color = "#ccffcc"; // green
+
+  div.style.backgroundColor = color;
 }
+
 
 export function renderEntries(rows) {
   const container = document.getElementById('dictionary');
