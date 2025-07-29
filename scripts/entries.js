@@ -1,37 +1,40 @@
 const STATUS_API_URL = 'https://script.google.com/macros/s/AKfycbzrm3SByO_yBjjbxu8nG_SJLcZzW5jld3ta2i5Zq8Bk04PZq5W5A7Uq0NVVahcs4Zu65w/exec';
 const entryStatuses = {};
 
+import { supabase } from './supabaseClient.js'
+
 async function loadStatuses() {
-  try {
-    const raw = await fetch(STATUS_API_URL).then(r => r.json());
-    console.log("🔍 Raw status response:", raw);
+  const { data, error } = await supabase.from('review_status').select('angla_padam, status')
 
-    Object.entries(raw).forEach(([word, status]) => {
-      entryStatuses[word] = status;
-    });
-
-    console.log("✅ Loaded statuses:", entryStatuses);
-  } catch (e) {
-    console.error('❌ Failed to load review statuses:', e);
+  if (error) {
+    console.error('❌ Error loading statuses:', error)
+    return {}
   }
+
+  const statusMap = {}
+  for (const row of data) {
+    statusMap[row.angla_padam] = row.status
+  }
+
+  console.log('✅ Loaded statuses from Supabase:', statusMap)
+  return statusMap
 }
 
 
 
-async function updateStatus(id, word, status) {
-  try {
-    await fetch(STATUS_API_URL, {
-      method: "POST",
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `word=${encodeURIComponent(word)}&status=${encodeURIComponent(status)}`
-    });
 
-    entryStatuses[word] = status;
-    colorCodeEntry(id, status);
-  } catch (e) {
-    console.error("Failed to update status:", e);
+async function updateStatus(anglaPadam, newStatus) {
+  const { data, error } = await supabase
+    .from('review_status')
+    .upsert({ angla_padam: anglaPadam, status: newStatus }, { onConflict: ['angla_padam'] })
+
+  if (error) {
+    console.error('❌ Failed to update status:', error)
+  } else {
+    console.log(`✅ Updated status of "${anglaPadam}" to "${newStatus}"`)
   }
 }
+
 
 
 function colorCodeEntry(id, status) {
