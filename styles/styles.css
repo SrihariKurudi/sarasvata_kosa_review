@@ -148,3 +148,11 @@ mark {
   border-top: 1px dashed #ccc;
   margin: 0.5rem 0;
 }
+
+.entry .headword {
+  margin-bottom: 0.4em; /* Reduce space below headword */
+}
+
+.entry .subentry:first-of-type {
+  margin-top: 0.2em; /* Reduce space above the first Sanskrit block */
+}
