@@ -103,6 +103,9 @@ export function renderEntries(rows) {
       `;
       subDiv.appendChild(para);
 
+      const statusBox = document.createElement('div');
+      statusBox.className = 'status-radio';
+
       // same statusBox code...
       subDiv.appendChild(statusBox);
 
@@ -116,9 +119,6 @@ export function renderEntries(rows) {
 
       // This will now target subDiv
       colorCodeEntry(subId, currentStatus);
-
-      const statusBox = document.createElement('div');
-      statusBox.className = 'status-radio';
 
       ['संस्कार्यम्', 'समीक्ष्यम्', 'सिद्धम्'].forEach(opt => {
         const label = document.createElement('label');
