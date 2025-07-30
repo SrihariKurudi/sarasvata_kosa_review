@@ -53,12 +53,13 @@ function colorCodeEntry(entryId, status) {
     return;
   }
 
-  let color = "#eee";
-  if (status === "संस्कार्यम्") color = "#ffdddd";
-  else if (status === "समीक्ष्यम्") color = "#fff7cc";
-  else if (status === "सिद्धम्") color = "#ddffdd";
+  let color = "#ccc";
+  if (status === "संस्कार्यम्") color = "#e74c3c";
+  else if (status === "समीक्ष्यम्") color = "#f1c40f";
+  else if (status === "सिद्धम्") color = "#2ecc71";
 
-  div.style.backgroundColor = color;
+  div.style.borderLeft = `6px solid ${color}`;
+  div.style.backgroundColor = "transparent";
   console.log(`🎨 ${entryId} → ${status} → ${color}`);
 }
 
