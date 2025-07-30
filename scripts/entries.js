@@ -92,14 +92,14 @@ export function renderEntries(rows) {
       const cleanSanskrit = sanskrit.replace(/\s+/g, '').trim();
       const statusKey = `${cleanWord}|${cleanSanskrit}`;
       const currentStatus = entryStatuses[statusKey];
-
+      if (!currentStatus) {
+        console.warn('⚠️ No status found for:', statusKey);
+      }
 
       const subId = `${entryId}-${i}`;
-
       const subDiv = document.createElement('div');
       subDiv.id = subId;
       subDiv.className = 'subentry';
-
       const para = document.createElement('p');
       para.innerHTML = `
         <b>संस्कृतपदम्:</b> ${sanskrit}<br>
@@ -107,7 +107,6 @@ export function renderEntries(rows) {
         <b>उदाहरणवाक्यम्:</b> ${example}
       `;
       subDiv.appendChild(para);
-
       const statusBox = document.createElement('div');
       statusBox.className = 'status-radio';
 
