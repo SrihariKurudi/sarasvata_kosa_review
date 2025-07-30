@@ -88,8 +88,8 @@ export function renderEntries(rows) {
 
     groupRows.forEach((row, i) => {
       const samskrta = row["संस्कृतपदम्"]?.trim() || '';
-      const notes = row["टिप्पणं/पदान्तरङ्गम्"] || '';
-      const example = row["उदाहरणवाक्यम्"] || '';
+      const notes = (row["टिप्पणं/पदान्तरङ्गम्"] || '').replace(/\n/g, '<br>');
+      const example = (row["उदाहरणवाक्यम्"] || '').replace(/\n/g, '<br>');
       const subId = `${entryId}-${i}`;
       const statusKey = `${word}|${samskrta.replace(/\s+/g, '')}`;
       const currentStatus = entryStatuses[statusKey];
