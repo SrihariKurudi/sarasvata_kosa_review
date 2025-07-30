@@ -105,7 +105,7 @@ export function renderEntries(rows) {
 
       const para = document.createElement('p');
       para.innerHTML = `
-        <div class="sanskrit">${sanskrit}</div>
+        <div class="sanskrit">${samskrta}</div>
         ${notes   ? `<div><b>📘 पदान्तरङ्गम्</b><div class="notes">${notes}</div></div>` : ''}
         ${example ? `<div><b>📝 उदाहरणम्</b><div class="example"><i>${example}</i></div></div>` : ''}
       `;
