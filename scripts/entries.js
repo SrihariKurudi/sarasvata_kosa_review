@@ -124,6 +124,11 @@ export function renderEntries(rows) {
       });
 
       subDiv.appendChild(statusBox);
+      const checked = statusBox.querySelector('input[type="radio"]:checked');
+      if (checked) {
+        colorCodeEntry(subId, checked.value);
+      }
+
       entryDiv.appendChild(subDiv);
 
       // ✅ Append before coloring
