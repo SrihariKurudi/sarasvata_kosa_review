@@ -105,11 +105,9 @@ export function renderEntries(rows) {
 
       const para = document.createElement('p');
       para.innerHTML = `
-        <span class="sanskrit">${samskrta}</span><br>
-        <b>टिप्पणं:</b><br>
-        <span class="notes">${notes}</span><br>
-        <b>उदाहरणवाक्यम्:</b><br>
-        <span class="example">${example}</span>
+        <div class="sanskrit">${sanskrit}</div>
+        ${notes   ? `<div><b>📘 पदान्तरङ्गम्</b><div class="notes">${notes}</div></div>` : ''}
+        ${example ? `<div><b>📝 उदाहरणम्</b><div class="example"><i>${example}</i></div></div>` : ''}
       `;
 
       subDiv.appendChild(para);
