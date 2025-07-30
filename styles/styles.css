@@ -152,6 +152,3 @@ mark {
   margin: 0.5rem 0;
 }
 
-.entry .subentry:first-of-type {
-  margin-top: 0.2em; /* Reduce space above the first Sanskrit block */
-}
