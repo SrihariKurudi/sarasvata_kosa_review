@@ -22,22 +22,27 @@ export async function loadStatuses() {
   return statusMap;
 }
 
-async function updateStatus(entryId, anglaPadam, newStatus) {
+async function updateStatus(entryId, anglaPadam, samskrtaPadam, newStatus) {
   const { error } = await supabase
     .from('entries_review')
     .upsert(
-      { id: entryId, angla_padam: anglaPadam, status: newStatus },
-      { onConflict: ['id'] }
+      {
+        angla_padam: anglaPadam,
+        samskrta_padam: samskrtaPadam,
+        status: newStatus
+      },
+      { onConflict: ['angla_padam'] }
     );
 
   if (error) {
     console.error('❌ Failed to update status:', error);
   } else {
-    console.log(`✅ Updated status of "${anglaPadam}" to "${newStatus}"`);
+    console.log(`✅ Status for "${anglaPadam}" saved as "${newStatus}"`);
     entryStatuses[anglaPadam.toLowerCase()] = newStatus;
     colorCodeEntry(entryId, newStatus);
   }
 }
+
 
 
 function colorCodeEntry(id, status) {
@@ -91,7 +96,7 @@ export function renderEntries(rows) {
       input.name = `status-${id}`;
       input.value = opt;
       if (entryStatuses[word] === opt) input.checked = true;
-      input.onclick = () => updateStatus(id, word, opt);
+      input.onclick = () => updateStatus(id, word, sanskrit, opt);
       label.appendChild(input);
       label.append(` ${opt} `);
       statusBox.appendChild(label);
