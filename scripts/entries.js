@@ -1,41 +1,43 @@
-const STATUS_API_URL = 'https://script.google.com/macros/s/AKfycbzrm3SByO_yBjjbxu8nG_SJLcZzW5jld3ta2i5Zq8Bk04PZq5W5A7Uq0NVVahcs4Zu65w/exec';
+import { supabase } from './supabaseClient.js';
+
 const entryStatuses = {};
 
-import { supabase } from './supabaseClient.js'
-
-async function loadStatuses() {
-  const { data, error } = await supabase.from('review_status').select('angla_padam, status')
-
-  if (error) {
-    console.error('❌ Error loading statuses:', error)
-    return {}
-  }
-
-  const statusMap = {}
-  for (const row of data) {
-    statusMap[row.angla_padam] = row.status
-  }
-
-  console.log('✅ Loaded statuses from Supabase:', statusMap)
-  return statusMap
-}
-
-
-
-
-async function updateStatus(anglaPadam, newStatus) {
+export async function loadStatuses() {
   const { data, error } = await supabase
     .from('review_status')
-    .upsert({ angla_padam: anglaPadam, status: newStatus }, { onConflict: ['angla_padam'] })
+    .select('angla_padam, status');
 
   if (error) {
-    console.error('❌ Failed to update status:', error)
-  } else {
-    console.log(`✅ Updated status of "${anglaPadam}" to "${newStatus}"`)
+    console.error('❌ Error loading statuses:', error);
+    return {};
   }
+
+  const statusMap = {};
+  for (const row of data) {
+    statusMap[row.angla_padam.toLowerCase()] = row.status;
+  }
+
+  Object.assign(entryStatuses, statusMap); // save globally for later use
+  console.log('✅ Loaded statuses from Supabase:', entryStatuses);
+  return statusMap;
 }
 
+async function updateStatus(entryId, anglaPadam, newStatus) {
+  const { error } = await supabase
+    .from('review_status')
+    .upsert(
+      { angla_padam: anglaPadam, status: newStatus },
+      { onConflict: ['angla_padam'] }
+    );
 
+  if (error) {
+    console.error('❌ Failed to update status:', error);
+  } else {
+    console.log(`✅ Updated status of "${anglaPadam}" to "${newStatus}"`);
+    entryStatuses[anglaPadam.toLowerCase()] = newStatus;
+    colorCodeEntry(entryId, newStatus);
+  }
+}
 
 function colorCodeEntry(id, status) {
   const div = document.getElementById(id);
@@ -48,7 +50,6 @@ function colorCodeEntry(id, status) {
 
   div.style.backgroundColor = color;
 }
-
 
 export function renderEntries(rows) {
   const container = document.getElementById('dictionary');
@@ -100,6 +101,3 @@ export function renderEntries(rows) {
     container.appendChild(div);
   });
 }
-
-
-export { loadStatuses };
