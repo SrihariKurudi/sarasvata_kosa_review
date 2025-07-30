@@ -4,7 +4,7 @@ const entryStatuses = {};
 
 export async function loadStatuses() {
   const { data, error } = await supabase
-    .from('review_status')
+    .from('entries_review')
     .select('angla_padam, status');
 
   if (error) {
@@ -24,7 +24,7 @@ export async function loadStatuses() {
 
 async function updateStatus(entryId, anglaPadam, newStatus) {
   const { error } = await supabase
-    .from('review_status')
+    .from('entries_review')
     .upsert(
       { angla_padam: anglaPadam, status: newStatus },
       { onConflict: ['angla_padam'] }
