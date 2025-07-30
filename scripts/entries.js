@@ -119,7 +119,12 @@ export function renderEntries(rows) {
         input.onclick = () =>
           updateStatus(subId, word, samskrta, notes, example, opt);
         label.appendChild(input);
-        label.append(` ${opt} `);
+        const emojiMap = {
+          "संस्कार्यम्": "🔴",
+          "समीक्ष्यम्": "🟡",
+          "सिद्धम्": "🟢"
+        };
+        label.append(`${emojiMap[opt]} ${opt}`);
         statusBox.appendChild(label);
       });
 
@@ -142,4 +147,3 @@ export function renderEntries(rows) {
     }
   });
 }
-

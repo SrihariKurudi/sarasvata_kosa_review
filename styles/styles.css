@@ -142,3 +142,9 @@ mark {
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
+
+.status-radio label {
+  margin-right: 1rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
