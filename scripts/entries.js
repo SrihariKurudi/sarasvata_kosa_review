@@ -23,16 +23,14 @@ export async function loadStatuses() {
   return statusMap;
 }
 
-async function updateStatus(entryId, anglaPadam, samskrtaPadam, notes, example, newStatus) {
+async function updateStatus(entryId, anglaPadam, samskrtaPadam, _notes, _example, newStatus) {
   const { error } = await supabase
     .from('entries_review')
     .upsert(
       {
         angla_padam: anglaPadam,
         samskrta_padam: samskrtaPadam,
-        notes,
-        example,
-        status: newStatus,
+        status: newStatus
       },
       { onConflict: ['angla_padam', 'samskrta_padam'] }
     );
@@ -45,6 +43,7 @@ async function updateStatus(entryId, anglaPadam, samskrtaPadam, notes, example, 
     colorCodeEntry(entryId, newStatus);
   }
 }
+
 
 
 
