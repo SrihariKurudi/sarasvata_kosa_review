@@ -46,107 +46,91 @@ async function updateStatus(entryId, anglaPadam, samskrtaPadam, _notes, _example
   }
 }
 
-
-
-
-function colorCodeEntry(id, status) {
-  const div = document.getElementById(id);
-  if (!div) return;
+function colorCodeEntry(entryId, status) {
+  const div = document.getElementById(entryId);
+  if (!div) {
+    console.warn('No div found for:', entryId);
+    return;
+  }
 
   let color = "#eee";
-  if (status === "संस्कार्यम्") color = "#ffcccc"; // red
-  else if (status === "समीक्ष्यम्") color = "#fff9cc"; // yellow
-  else if (status === "सिद्धम्") color = "#ccffcc"; // green
+  if (status === "संस्कार्यम्") color = "#ffdddd";
+  else if (status === "समीक्ष्यम्") color = "#fff7cc";
+  else if (status === "सिद्धम्") color = "#ddffdd";
 
   div.style.backgroundColor = color;
+  console.log(`🎨 ${entryId} → ${status} → ${color}`);
 }
 
-export function renderEntries(rows) {
-  const container = document.getElementById('dictionary');
-  container.innerHTML = '';
 
+export function renderEntries(rows, statusMap) {
+  const container = document.getElementById('entries-container');
+  container.innerHTML = ''; // Clear existing
+
+  // Group rows by angla_padam
   const grouped = {};
-  rows.forEach(row => {
-    const word = row["आङ्ग्लपदम्"]?.toLowerCase();
-    if (!word) return;
+  for (const row of rows) {
+    const word = row["आङ्ग्लपदम्"]?.trim().toLowerCase();
+    if (!word) continue;
     if (!grouped[word]) grouped[word] = [];
     grouped[word].push(row);
-  });
+  }
 
-
-  Object.entries(grouped).forEach(([word, rows], index) => {
-    const entryId = `entry-${index}`;
-    const div = document.createElement('div');
-    div.className = 'entry';
-    div.id = entryId;
+  Object.entries(grouped).forEach(([word, groupRows], groupIndex) => {
+    const entryId = `entry-${groupIndex}`;
+    const entryDiv = document.createElement('div');
+    entryDiv.className = 'entry';
+    entryDiv.id = entryId;
 
     const title = document.createElement('h3');
     title.textContent = word;
-    div.appendChild(title);
+    entryDiv.appendChild(title);
 
-    rows.forEach((row, i) => {
-      const sanskrit = row["संस्कृतपदम्"] || '';
+    groupRows.forEach((row, i) => {
+      const samskrta = row["संस्कृतपदम्"]?.trim() || '';
       const notes = row["टिप्पणं/पदान्तरङ्गम्"] || '';
       const example = row["उदाहरणवाक्यम्"] || '';
-      const cleanWord = word.trim().toLowerCase();
-      const cleanSanskrit = sanskrit.replace(/\s+/g, '').trim();
-      const statusKey = `${cleanWord}|${cleanSanskrit}`;
-      const currentStatus = entryStatuses[statusKey];
-      if (!currentStatus) {
-        console.warn('⚠️ No status found for:', statusKey);
-      }
-
       const subId = `${entryId}-${i}`;
+      const statusKey = `${word}|${samskrta.replace(/\s+/g, '')}`;
+      const currentStatus = statusMap[statusKey];
+
       const subDiv = document.createElement('div');
-      subDiv.id = subId;
       subDiv.className = 'subentry';
+      subDiv.id = subId;
+
       const para = document.createElement('p');
       para.innerHTML = `
-        <b>संस्कृतपदम्:</b> ${sanskrit}<br>
+        <b>संस्कृतपदम्:</b> ${samskrta}<br>
         <b>टिप्पणं:</b> ${notes}<br>
         <b>उदाहरणवाक्यम्:</b> ${example}
       `;
       subDiv.appendChild(para);
+
       const statusBox = document.createElement('div');
       statusBox.className = 'status-radio';
-
-      // same statusBox code...
-      subDiv.appendChild(statusBox);
-
-      // Optional separator:
-      if (i < rows.length - 1) {
-        const hr = document.createElement('hr');
-        subDiv.appendChild(hr);
-      }
-
-      div.appendChild(subDiv);
-
-      // This will now target subDiv
-      colorCodeEntry(subId, currentStatus);
 
       ['संस्कार्यम्', 'समीक्ष्यम्', 'सिद्धम्'].forEach(opt => {
         const label = document.createElement('label');
         const input = document.createElement('input');
         input.type = 'radio';
-        input.name = `status-${entryId}-${i}`;
+        input.name = `status-${subId}`;
         input.value = opt;
         if (currentStatus === opt) input.checked = true;
-        input.onclick = () => updateStatus(`${entryId}-${i}`, word, sanskrit, notes, example, opt);
+        input.onclick = () =>
+          updateStatus(subId, word, samskrta, notes, example, opt);
         label.appendChild(input);
         label.append(` ${opt} `);
         statusBox.appendChild(label);
       });
 
-      div.appendChild(statusBox);
-      colorCodeEntry(`${entryId}-${i}`, currentStatus);
+      subDiv.appendChild(statusBox);
+      entryDiv.appendChild(subDiv);
 
-      if (i < rows.length - 1) {
-        const hr = document.createElement('hr');
-        div.appendChild(hr);
-      }
+      // ✅ Append before coloring
+      colorCodeEntry(subId, currentStatus);
     });
 
-    container.appendChild(div);
+    container.appendChild(entryDiv);
   });
-
 }
+
