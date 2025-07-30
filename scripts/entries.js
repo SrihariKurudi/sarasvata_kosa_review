@@ -96,9 +96,9 @@ export function renderEntries(rows) {
 
       if (i > 0) {
         const hr = document.createElement('hr');
-        subContainer.appendChild(hr);
+        entryDiv.appendChild(hr);
       }
-      
+
       const subDiv = document.createElement('div');
       subDiv.className = 'subentry';
       subDiv.id = subId;
