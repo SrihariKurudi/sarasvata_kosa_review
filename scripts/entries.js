@@ -89,13 +89,33 @@ export function renderEntries(rows) {
       const statusKey = `${word}|${sanskrit}`;
       const currentStatus = entryStatuses[statusKey];
 
+      const subId = `${entryId}-${i}`;
+
+      const subDiv = document.createElement('div');
+      subDiv.id = subId;
+      subDiv.className = 'subentry';
+
       const para = document.createElement('p');
       para.innerHTML = `
         <b>संस्कृतपदम्:</b> ${sanskrit}<br>
         <b>टिप्पणं:</b> ${notes}<br>
         <b>उदाहरणवाक्यम्:</b> ${example}
       `;
-      div.appendChild(para);
+      subDiv.appendChild(para);
+
+      // same statusBox code...
+      subDiv.appendChild(statusBox);
+
+      // Optional separator:
+      if (i < rows.length - 1) {
+        const hr = document.createElement('hr');
+        subDiv.appendChild(hr);
+      }
+
+      div.appendChild(subDiv);
+
+      // This will now target subDiv
+      colorCodeEntry(subId, currentStatus);
 
       const statusBox = document.createElement('div');
       statusBox.className = 'status-radio';
