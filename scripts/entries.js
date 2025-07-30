@@ -130,9 +130,6 @@ export function renderEntries(rows) {
       }
 
       entryDiv.appendChild(subDiv);
-
-      // ✅ Append before coloring
-      colorCodeEntry(subId, currentStatus);
     });
 
     container.appendChild(entryDiv);
