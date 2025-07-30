@@ -26,8 +26,8 @@ async function updateStatus(entryId, anglaPadam, newStatus) {
   const { error } = await supabase
     .from('entries_review')
     .upsert(
-      { angla_padam: anglaPadam, status: newStatus },
-      { onConflict: ['angla_padam'] }
+      { id: entryId, angla_padam: anglaPadam, status: newStatus },
+      { onConflict: ['id'] }
     );
 
   if (error) {
@@ -38,6 +38,7 @@ async function updateStatus(entryId, anglaPadam, newStatus) {
     colorCodeEntry(entryId, newStatus);
   }
 }
+
 
 function colorCodeEntry(id, status) {
   const div = document.getElementById(id);
