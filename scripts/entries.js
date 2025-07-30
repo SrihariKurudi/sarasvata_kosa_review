@@ -70,7 +70,7 @@ export function renderEntries(rows) {
   // Group rows by angla_padam
   const grouped = {};
   for (const row of rows) {
-    const word = row["आङ्ग्लपदम्"]?.trim().toLowerCase();
+    const word = row["आङ्ग्लपदम्"]?.trim();
     if (!word) continue;
     if (!grouped[word]) grouped[word] = [];
     grouped[word].push(row);
