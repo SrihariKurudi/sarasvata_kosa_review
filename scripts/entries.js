@@ -14,7 +14,9 @@ export async function loadStatuses() {
 
   const statusMap = {};
   for (const row of data) {
-    const key = `${row.angla_padam.toLowerCase()}|${row.samskrta_padam}`;
+    const cleanAngla = row.angla_padam.toLowerCase().trim();
+    const cleanSanskrit = row.samskrta_padam.replace(/\s+/g, '').trim(); // remove all spacing
+    const key = `${cleanAngla}|${cleanSanskrit}`;
     statusMap[key] = row.status;
   }
 
@@ -86,8 +88,11 @@ export function renderEntries(rows) {
       const sanskrit = row["संस्कृतपदम्"] || '';
       const notes = row["टिप्पणं/पदान्तरङ्गम्"] || '';
       const example = row["उदाहरणवाक्यम्"] || '';
-      const statusKey = `${word}|${sanskrit}`;
+      const cleanWord = word.trim().toLowerCase();
+      const cleanSanskrit = sanskrit.replace(/\s+/g, '').trim();
+      const statusKey = `${cleanWord}|${cleanSanskrit}`;
       const currentStatus = entryStatuses[statusKey];
+
 
       const subId = `${entryId}-${i}`;
 
