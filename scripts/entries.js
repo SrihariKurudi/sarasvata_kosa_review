@@ -63,7 +63,7 @@ function colorCodeEntry(entryId, status) {
 }
 
 
-export function renderEntries(rows, statusMap) {
+export function renderEntries(rows) {
   const container = document.getElementById('entries-container');
   container.innerHTML = ''; // Clear existing
 
@@ -92,7 +92,7 @@ export function renderEntries(rows, statusMap) {
       const example = row["उदाहरणवाक्यम्"] || '';
       const subId = `${entryId}-${i}`;
       const statusKey = `${word}|${samskrta.replace(/\s+/g, '')}`;
-      const currentStatus = statusMap[statusKey];
+      const currentStatus = entryStatuses[statusKey];
 
       const subDiv = document.createElement('div');
       subDiv.className = 'subentry';
