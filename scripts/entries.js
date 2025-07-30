@@ -5,7 +5,7 @@ const entryStatuses = {};
 export async function loadStatuses() {
   const { data, error } = await supabase
     .from('entries_review')
-    .select('angla_padam, status');
+    .select('angla_padam, samskrta_padam, status');
 
   if (error) {
     console.error('❌ Error loading statuses:', error);
@@ -14,7 +14,8 @@ export async function loadStatuses() {
 
   const statusMap = {};
   for (const row of data) {
-    statusMap[row.angla_padam.toLowerCase()] = row.status;
+    const key = `${row.angla_padam.toLowerCase()}|${row.samskrta_padam}`;
+    statusMap[key] = row.status;
   }
 
   Object.assign(entryStatuses, statusMap); // save globally for later use
@@ -22,23 +23,25 @@ export async function loadStatuses() {
   return statusMap;
 }
 
-async function updateStatus(entryId, anglaPadam, samskrtaPadam, newStatus) {
+async function updateStatus(entryId, anglaPadam, samskrtaPadam, notes, example, newStatus) {
   const { error } = await supabase
     .from('entries_review')
     .upsert(
       {
         angla_padam: anglaPadam,
         samskrta_padam: samskrtaPadam,
-        status: newStatus
+        notes,
+        example,
+        status: newStatus,
       },
-      { onConflict: ['angla_padam'] }
+      { onConflict: ['angla_padam', 'samskrta_padam'] }
     );
 
   if (error) {
     console.error('❌ Failed to update status:', error);
   } else {
-    console.log(`✅ Status for "${anglaPadam}" saved as "${newStatus}"`);
-    entryStatuses[anglaPadam.toLowerCase()] = newStatus;
+    console.log(`✅ Saved: ${anglaPadam} ⇨ ${samskrtaPadam} = ${newStatus}`);
+    entryStatuses[`${anglaPadam.toLowerCase()}|${samskrtaPadam}`] = newStatus;
     colorCodeEntry(entryId, newStatus);
   }
 }
@@ -61,49 +64,66 @@ export function renderEntries(rows) {
   const container = document.getElementById('dictionary');
   container.innerHTML = '';
 
-  rows.forEach((row, i) => {
-    const id = `entry-${i}`;
+  const grouped = {};
+  rows.forEach(row => {
     const word = row["आङ्ग्लपदम्"]?.toLowerCase();
-    const sanskrit = row["संस्कृतपदम्"] || '';
-    const notes = row["टिप्पणं/पदान्तरङ्गम्"] || '';
-    const example = row["उदाहरणवाक्यम्"] || '';
-
     if (!word) return;
+    if (!grouped[word]) grouped[word] = [];
+    grouped[word].push(row);
+  });
 
+
+  Object.entries(grouped).forEach(([word, rows], index) => {
+    const entryId = `entry-${index}`;
     const div = document.createElement('div');
     div.className = 'entry';
-    div.id = id;
+    div.id = entryId;
 
     const title = document.createElement('h3');
     title.textContent = word;
     div.appendChild(title);
 
-    const body = document.createElement('p');
-    body.innerHTML = `
-      <b>संस्कृतपदम्:</b> ${sanskrit}<br>
-      <b>टिप्पणं:</b> ${notes}<br>
-      <b>उदाहरणवाक्यम्:</b> ${example}
-    `;
-    div.appendChild(body);
+    rows.forEach((row, i) => {
+      const sanskrit = row["संस्कृतपदम्"] || '';
+      const notes = row["टिप्पणं/पदान्तरङ्गम्"] || '';
+      const example = row["उदाहरणवाक्यम्"] || '';
+      const statusKey = `${word}|${sanskrit}`;
+      const currentStatus = entryStatuses[statusKey];
 
-    const statusBox = document.createElement('div');
-    statusBox.className = 'status-radio';
+      const para = document.createElement('p');
+      para.innerHTML = `
+        <b>संस्कृतपदम्:</b> ${sanskrit}<br>
+        <b>टिप्पणं:</b> ${notes}<br>
+        <b>उदाहरणवाक्यम्:</b> ${example}
+      `;
+      div.appendChild(para);
 
-    ['संस्कार्यम्', 'समीक्ष्यम्', 'सिद्धम्'].forEach(opt => {
-      const label = document.createElement('label');
-      const input = document.createElement('input');
-      input.type = 'radio';
-      input.name = `status-${id}`;
-      input.value = opt;
-      if (entryStatuses[word] === opt) input.checked = true;
-      input.onclick = () => updateStatus(id, word, sanskrit, opt);
-      label.appendChild(input);
-      label.append(` ${opt} `);
-      statusBox.appendChild(label);
+      const statusBox = document.createElement('div');
+      statusBox.className = 'status-radio';
+
+      ['संस्कार्यम्', 'समीक्ष्यम्', 'सिद्धम्'].forEach(opt => {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = `status-${entryId}-${i}`;
+        input.value = opt;
+        if (currentStatus === opt) input.checked = true;
+        input.onclick = () => updateStatus(`${entryId}-${i}`, word, sanskrit, notes, example, opt);
+        label.appendChild(input);
+        label.append(` ${opt} `);
+        statusBox.appendChild(label);
+      });
+
+      div.appendChild(statusBox);
+      colorCodeEntry(`${entryId}-${i}`, currentStatus);
+
+      if (i < rows.length - 1) {
+        const hr = document.createElement('hr');
+        div.appendChild(hr);
+      }
     });
 
-    div.appendChild(statusBox);
-    colorCodeEntry(id, entryStatuses[word]);
     container.appendChild(div);
   });
+
 }
