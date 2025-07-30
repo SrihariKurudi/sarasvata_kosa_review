@@ -137,5 +137,12 @@ export function renderEntries(rows) {
 
     container.appendChild(entryDiv);
   });
+  // Final pass to apply color to all subentries after DOM render
+  document.querySelectorAll('.subentry').forEach(div => {
+    const checked = div.querySelector('input[type="radio"]:checked');
+    if (checked) {
+      colorCodeEntry(div.id, checked.value);
+    }
+  });
 }
 
