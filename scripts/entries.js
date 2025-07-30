@@ -83,6 +83,7 @@ export function renderEntries(rows) {
     entryDiv.id = entryId;
 
     const title = document.createElement('h3');
+    title.className = 'headword';
     title.textContent = word;
     entryDiv.appendChild(title);
 
