@@ -1,5 +1,7 @@
 import { supabase } from './supabaseClient.js';
 
+export const entryStatuses = {};
+
 export async function loadStatuses() {
   const { data, error } = await supabase
     .from('entries_review')
@@ -61,4 +63,4 @@ function colorCodeEntry(entryId, status) {
   console.log(`🎨 ${entryId} → ${status} → ${color}`);
 }
 
-export { entryStatuses, colorCodeEntry };
+export {loadStatuses, updateStatus, entryStatuses, colorCodeEntry };
