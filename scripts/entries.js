@@ -115,7 +115,6 @@ export function renderEntries(rows) {
         ${notes   ? `<div><b>📘 पदान्तरङ्गम्</b><div class="notes">${notes}</div></div>` : ''}
         ${example ? `<div><b>📝 उदाहरणम्</b><div class="example"><i>${example}</i></div></div>` : ''}
       `;
-
       subDiv.appendChild(para);
 
       const statusBox = document.createElement('div');
@@ -136,6 +135,32 @@ export function renderEntries(rows) {
       });
 
       subDiv.appendChild(statusBox);
+
+      // 💥 Add Clear Button
+      const clearBtn = document.createElement('button');
+      clearBtn.textContent = '❌ Clear';
+      clearBtn.className = 'clear-button';
+      clearBtn.onclick = async () => {
+        statusBox.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+        colorCodeEntry(subId, null);
+
+        const { error } = await supabase
+          .from('entries_review')
+          .delete()
+          .match({
+            angla_padam: word,
+            samskrta_padam: samskrta
+          });
+
+        if (error) {
+          console.error('❌ Failed to delete status:', error);
+        } else {
+          console.log(`🗑️ Cleared status for: ${word} ⇨ ${samskrta}`);
+          delete entryStatuses[statusKey];
+        }
+      };
+      subDiv.appendChild(clearBtn);
+
       const checked = statusBox.querySelector('input[type="radio"]:checked');
       if (checked) {
         colorCodeEntry(subId, checked.value);
@@ -146,6 +171,7 @@ export function renderEntries(rows) {
 
     container.appendChild(entryDiv);
   });
+
   // Final pass to apply color to all subentries after DOM render
   document.querySelectorAll('.subentry').forEach(div => {
     const checked = div.querySelector('input[type="radio"]:checked');
