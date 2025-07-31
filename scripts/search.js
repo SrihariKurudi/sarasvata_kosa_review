@@ -2,6 +2,11 @@
  * Filters & highlights entries live as the user types.
  * @param {Event} e - Input event from #searchBox
  */
+
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 export function filterEntries(e) {
   const q = e.target.value.trim().toLowerCase();
 
@@ -15,10 +20,14 @@ export function filterEntries(e) {
       const el = entry.querySelector('.' + cls);
       if (!el) return;
 
-      const raw = el.dataset.raw || el.innerHTML;
+      // Save original content only once
+      if (!el.dataset.raw) el.dataset.raw = el.innerHTML;
+
+      const raw = el.dataset.raw;
       el.innerHTML = (hit && q)
-        ? raw.replace(new RegExp(`(${q})`, 'gi'), '<mark>$1</mark>')
+        ? raw.replace(new RegExp(`(${escapeRegExp(q)})`, 'gi'), '<mark>$1</mark>')
         : raw;
+
     });
   });
 }
