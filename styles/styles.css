@@ -99,7 +99,7 @@ header.compact img {
   font-size: 1.3em;
   font-weight: bold;
   color: #4e2c0a;
-  margin-bottom: 0.1em;
+  margin-bottom: 0.025em;
 }
 .sanskrit {
   font-size: 1.2em;
@@ -107,7 +107,7 @@ header.compact img {
   color: #083b6d;
   font-family: 'Noto Serif Devanagari', serif;
   line-height: 1.4;
-  margin-top: 0.1em; /* ✅ Add this to tighten spacing from above */
+  margin-top: 0.025em; /* ✅ Add this to tighten spacing from above */
   display: block;    /* ✅ Ensures the margin applies properly */
 }
 .notes, .example {
