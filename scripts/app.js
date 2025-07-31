@@ -29,3 +29,43 @@ async function loadSheet(url) {
 }
 
 init();
+
+import { supabase } from './supabaseClient.js';
+import { entryStatuses, colorCodeEntry } from './entries.js'; // ensure these are exported
+
+function getSubEntryIdFromKey(key) {
+  // This reconstructs the ID from key (e.g., 'headword|संस्कृतपदम्')
+  const allEntries = document.querySelectorAll('.subentry');
+  for (const div of allEntries) {
+    const word = div.dataset.word;
+    const sanskrit = div.dataset.sanskrit;
+    const idKey = `${word?.toLowerCase()}|${sanskrit?.replace(/\s+/g, '')}`;
+    if (idKey === key) return div.id;
+  }
+  return null;
+}
+
+supabase
+  .channel('entries_review_realtime')
+  .on(
+    'postgres_changes',
+    {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'entries_review'
+    },
+    (payload) => {
+      const updated = payload.new;
+      const key = `${updated.angla_padam.toLowerCase()}|${updated.samskrta_padam.replace(/\s+/g, '')}`;
+      entryStatuses[key] = updated.status;
+
+      const subId = getSubEntryIdFromKey(key);
+      if (subId) {
+        console.log(`🔁 Realtime updated: ${key} → ${updated.status}`);
+        colorCodeEntry(subId, updated.status);
+        const checked = document.querySelector(`input[name="status-${subId}"][value="${updated.status}"]`);
+        if (checked) checked.checked = true;
+      }
+    }
+  )
+  .subscribe();

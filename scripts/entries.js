@@ -103,6 +103,8 @@ export function renderEntries(rows) {
       const subDiv = document.createElement('div');
       subDiv.className = 'subentry';
       subDiv.id = subId;
+      subDiv.dataset.word = word;
+      subDiv.dataset.sanskrit = samskrta.replace(/\s+/g, '');
 
       const para = document.createElement('p');
       para.innerHTML = `
@@ -149,3 +151,5 @@ export function renderEntries(rows) {
     }
   });
 }
+
+export { entryStatuses, colorCodeEntry };
