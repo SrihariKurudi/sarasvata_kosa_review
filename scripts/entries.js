@@ -143,26 +143,30 @@ export function renderEntries(rows) {
         colorCodeEntry(subId, null);
 
         const normalize = s => s?.trim().toLowerCase().replace(/\s+/g, '');
-        const fallbackStatus = 'अपरीक्षितम्';
+const fallbackStatus = 'अपरीक्षितम्';
 
-        const { error } = await supabase
-          .from('entries_review')
-          .upsert(
-            {
-              angla_padam: word.trim().toLowerCase(),
-              samskrta_padam: samskrta.replace(/\s+/g, ''),
-              status: fallbackStatus
-            },
-            { onConflict: ['angla_padam', 'samskrta_padam'] }
-          );
+const { error } = await supabase
+  .from('entries_review')
+  .upsert(
+    {
+      angla_padam: word.trim().toLowerCase(),
+      samskrta_padam: samskrta.trim(), // DO NOT remove inner spaces
+      status: fallbackStatus
+    },
+    { onConflict: ['angla_padam', 'samskrta_padam'] }
+  );
 
-        if (error) {
-          console.error('❌ Failed to reset status to अपरिक्षितम्:', error);
-        } else {
-          entryStatuses[statusKey] = fallbackStatus;
-          colorCodeEntry(subId, fallbackStatus);
-          console.log(`🧹 Cleared: ${word} ⇨ ${samskrta} → set to अपरिक्षितम्`);
-        }
+if (error) {
+  console.error('❌ Failed to reset status to अपरीक्षितम्:', error);
+} else {
+  const key = `${word.trim().toLowerCase()}|${samskrta.replace(/\s+/g, '')}`;
+  entryStatuses[key] = fallbackStatus;
+  colorCodeEntry(subId, fallbackStatus);
+  // Optionally uncheck all radio buttons visually:
+  subDiv.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  console.log(`🧹 Cleared: ${word} ⇨ ${samskrta} → set to अपरीक्षितम्`);
+}
+
       };
       statusBox.appendChild(clearBtn);
       subDiv.appendChild(statusBox);
