@@ -12,18 +12,19 @@ export async function loadStatuses() {
     return {};
   }
 
-  const statusMap = {};
-  for (const row of data) {
-    const cleanAngla = row.angla_padam.toLowerCase().trim();
-    const cleanSanskrit = row.samskrta_padam.replace(/\s+/g, '').trim(); // remove all spacing
-    const key = `${cleanAngla}|${cleanSanskrit}`;
-    statusMap[key] = row.status;
-  }
+const normalize = s => s?.trim().toLowerCase().replace(/\s+/g, '');
+const statusMap = {};
+for (const row of data) {
+  const key = `${normalize(row.angla_padam)}|${normalize(row.samskrta_padam)}`;
+  statusMap[key] = row.status;
+}
 
-  Object.assign(entryStatuses, statusMap); // save globally for later use
+
+  Object.assign(entryStatuses, statusMap);
   console.log('✅ Loaded statuses from Supabase:', entryStatuses);
   return statusMap;
 }
+
 
 async function updateStatus(entryId, anglaPadam, samskrtaPadam, _notes, _example, newStatus) {
   const { error } = await supabase
@@ -92,7 +93,8 @@ export function renderEntries(rows) {
       const notes = (row["टिप्पणं/पदान्तरङ्गम्"] || '').replace(/\n/g, '<br>');
       const example = (row["उदाहरणवाक्यम्"] || '').replace(/\n/g, '<br>');
       const subId = `${entryId}-${i}`;
-      const statusKey = `${word}|${samskrta.replace(/\s+/g, '')}`;
+      const normalize = s => s?.trim().toLowerCase().replace(/\s+/g, '');
+      const statusKey = `${normalize(word)}|${normalize(samskrta)}`;
       const currentStatus = entryStatuses[statusKey];
       console.log('🔑 Looking for statusKey:', statusKey, '→ Found:', entryStatuses[statusKey]);
 
