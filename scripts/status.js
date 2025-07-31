@@ -60,3 +60,5 @@ function colorCodeEntry(entryId, status) {
   div.style.backgroundColor = color;
   console.log(`🎨 ${entryId} → ${status} → ${color}`);
 }
+
+export { entryStatuses, colorCodeEntry };

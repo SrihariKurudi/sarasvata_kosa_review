@@ -6,7 +6,6 @@ import {
   updateStatus,
   colorCodeEntry
 } from './status.js';
-const entryStatuses = {};
 
 export function renderEntries(rows) {
   const container = document.getElementById('entries-container');
@@ -135,4 +134,3 @@ export function renderEntries(rows) {
   });
 }
 
-export { entryStatuses, colorCodeEntry };
