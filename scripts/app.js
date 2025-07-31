@@ -4,7 +4,7 @@ import { getSheetData } from './data.js';
 import { renderEntries, loadStatuses } from './entries.js';
 import { filterEntries } from './search.js';
 import { adjustNavbar } from './ui.js';
-import { loadSheet } from './scripts/app.js';
+
 window.onTabSelect = loadSheet;
 
 async function init() {
