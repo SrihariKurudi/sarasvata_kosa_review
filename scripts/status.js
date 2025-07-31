@@ -2,7 +2,7 @@ import { supabase } from './supabaseClient.js';
 
 export const entryStatuses = {};
 
-export async function loadStatuses() {
+async function loadStatuses() {
   const { data, error } = await supabase
     .from('entries_review')
     .select('angla_padam, samskrta_padam, status');
@@ -63,4 +63,4 @@ function colorCodeEntry(entryId, status) {
   console.log(`🎨 ${entryId} → ${status} → ${color}`);
 }
 
-export {loadStatuses, updateStatus, colorCodeEntry };
+export {loadStatuses, updateStatus, colorCodeEntry};
