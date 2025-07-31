@@ -37,7 +37,7 @@ async function loadSheet(url) {
 init();
 
 import { supabase } from './supabaseClient.js';
-import { entryStatuses, colorCodeEntry } from './entries.js'; // ensure these are exported
+import { entryStatuses, colorCodeEntry } from './status.js'; // ensure these are exported
 
 function getSubEntryIdFromKey(key) {
   // This reconstructs the ID from key (e.g., 'headword|संस्कृतपदम्')
