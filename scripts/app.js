@@ -19,7 +19,7 @@ async function init() {
 
 async function loadSheet(url) {
   try {
-    const statuses = await loadStatuses();
+    const statuses = await loadStatuses(supabase);
     console.log("🔎 [DEBUG] Statuses just loaded:", statuses);
 
     const rows = await getSheetData(url);
