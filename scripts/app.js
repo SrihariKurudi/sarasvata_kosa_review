@@ -1,7 +1,7 @@
 import { sheetConfig } from './config.js';
 import { renderTabs } from './tabs.js';
 import { getSheetData } from './data.js';
-import { renderEntries, loadStatuses } from './entries.js';
+import { renderEntries, loadStatuses } from './status.js';
 import { filterEntries } from './search.js';
 import { adjustNavbar } from './ui.js';
 
