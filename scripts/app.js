@@ -4,6 +4,8 @@ import { getSheetData } from './data.js';
 import { renderEntries, loadStatuses } from './entries.js';
 import { filterEntries } from './search.js';
 import { adjustNavbar } from './ui.js';
+import { loadSheet } from './scripts/app.js';
+window.onTabSelect = loadSheet;
 
 async function init() {
   renderTabs(loadSheet);
@@ -17,9 +19,12 @@ async function init() {
 
 async function loadSheet(url) {
   try {
-    await loadStatuses();
+    const statuses = await loadStatuses();
+    console.log("🔎 [DEBUG] Statuses just loaded:", statuses);
+
     const rows = await getSheetData(url);
-    console.log("Fetched rows:", rows);
+    console.log("📥 Fetched rows:", rows);
+
     renderEntries(rows);
   } catch (err) {
     console.error('❌ Fetch error:', err);
@@ -27,6 +32,7 @@ async function loadSheet(url) {
       "<p style='color:red;'>❌ Failed to load data. Check sheet visibility or format.</p>";
   }
 }
+
 
 init();
 

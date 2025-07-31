@@ -94,6 +94,7 @@ export function renderEntries(rows) {
       const subId = `${entryId}-${i}`;
       const statusKey = `${word}|${samskrta.replace(/\s+/g, '')}`;
       const currentStatus = entryStatuses[statusKey];
+      console.log('🔑 Looking for statusKey:', statusKey, '→ Found:', entryStatuses[statusKey]);
 
       if (i > 0) {
         const hr = document.createElement('hr');
