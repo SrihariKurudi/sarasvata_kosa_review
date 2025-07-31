@@ -63,4 +63,4 @@ function colorCodeEntry(entryId, status) {
   console.log(`🎨 ${entryId} → ${status} → ${color}`);
 }
 
-export {loadStatuses, updateStatus, entryStatuses, colorCodeEntry };
+export {loadStatuses, updateStatus, colorCodeEntry };
