@@ -142,12 +142,13 @@ export function renderEntries(rows) {
         statusBox.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
         colorCodeEntry(subId, null);
 
+        const normalize = s => s?.trim().toLowerCase().replace(/\s+/g, '');
         const { error } = await supabase
           .from('entries_review')
           .delete()
           .match({
-            angla_padam: word,
-            samskrta_padam: samskrta
+            angla_padam: word.trim().toLowerCase(),
+            samskrta_padam: samskrta.replace(/\s+/g, '')
           });
 
         if (error) {
