@@ -1,23 +1,27 @@
+// ─── Module Imports ────────────────────────────────────────────────────────────
 import { sheetConfig } from './config.js';
 import { renderTabs } from './tabs.js';
 import { getSheetData } from './data.js';
 import { renderEntries } from './entries.js';
-import { loadStatuses } from './status.js';
+import { loadStatuses, entryStatuses, colorCodeEntry } from './status.js';
 import { filterEntries } from './search.js';
 import { adjustNavbar } from './ui.js';
+import { supabase } from './supabaseClient.js';
 
-window.onTabSelect = loadSheet;
-
+// ─── Initialize Application ────────────────────────────────────────────────────
 async function init() {
-  renderTabs(loadSheet);
+  renderTabs(loadSheet); // Populate tab UI and bind load handler
+
   document.getElementById('searchBox')
     .addEventListener('input', filterEntries);
+
   window.addEventListener('scroll', adjustNavbar);
 
   const firstUrl = Object.values(sheetConfig)[0];
-  loadSheet(firstUrl);
+  loadSheet(firstUrl); // Load the first sheet on startup
 }
 
+// ─── Load Data from Sheet and Populate UI ──────────────────────────────────────
 async function loadSheet(url) {
   try {
     const statuses = await loadStatuses(supabase);
@@ -34,14 +38,11 @@ async function loadSheet(url) {
   }
 }
 
+// ─── Handle Tab Selection ──────────────────────────────────────────────────────
+window.onTabSelect = loadSheet;
 
-init();
-
-import { supabase } from './supabaseClient.js';
-import { entryStatuses, colorCodeEntry } from './status.js'; // ensure these are exported
-
+// ─── Helper: Map Supabase Entry Key to DOM ID ──────────────────────────────────
 function getSubEntryIdFromKey(key) {
-  // This reconstructs the ID from key (e.g., 'headword|संस्कृतपदम्')
   const allEntries = document.querySelectorAll('.subentry');
   for (const div of allEntries) {
     const word = div.dataset.word;
@@ -52,6 +53,7 @@ function getSubEntryIdFromKey(key) {
   return null;
 }
 
+// ─── Supabase Realtime Subscription ────────────────────────────────────────────
 supabase
   .channel('entries_review_realtime')
   .on(
@@ -70,9 +72,15 @@ supabase
       if (subId) {
         console.log(`🔁 Realtime updated: ${key} → ${updated.status}`);
         colorCodeEntry(subId, updated.status);
-        const checked = document.querySelector(`input[name="status-${subId}"][value="${updated.status}"]`);
+
+        const checked = document.querySelector(
+          `input[name="status-${subId}"][value="${updated.status}"]`
+        );
         if (checked) checked.checked = true;
       }
     }
   )
   .subscribe();
+
+// ─── Bootstrapping ─────────────────────────────────────────────────────────────
+init();

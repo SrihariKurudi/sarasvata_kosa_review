@@ -9,34 +9,38 @@
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <a href="https://sarasvatam.org/"><img src="assets/sarasvata_logo.svg" alt="Logo" /></a>
-    <span class="site-title">सारस्वतकोशः – व्यावहारिकम्</span>
-  </div>
+  <!-- ─── Header Bar ─────────────────────────────────────────────── -->
+  <header>
+    <div class="header-left">
+      <a href="https://sarasvatam.org/">
+        <img src="assets/sarasvata_logo.svg" alt="Logo" />
+      </a>
+      <span class="site-title">सारस्वतकोशः – व्यावहारिकम्</span>
+    </div>
 
-  <div id="tabs" class="header-center"></div>
+    <div id="tabs" class="header-center"></div>
 
-  <div class="header-right">
-    <input type="text" id="searchBox" placeholder="अन्विष्यताम्…" />
-  </div>
-</header>
+    <div class="header-right">
+      <input type="text" id="searchBox" placeholder="अन्विष्यताम्…" />
+    </div>
+  </header>
 
-<div id="entries-container"></div>
+  <!-- ─── Main Content ────────────────────────────────────────────── -->
+  <div id="entries-container"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <!-- ─── Supabase JS Client ──────────────────────────────────────── -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-<!-- load the app -->
-<script type="module" src="scripts/app.js"></script>
+  <!-- ─── App Module ──────────────────────────────────────────────── -->
+  <script type="module" src="scripts/app.js"></script>
 
-<!-- Aksharamukha Web‑plugin (optional)
-<script src="https://cdn.jsdelivr.net/gh/virtualvinodh/aksharamukha/aksharamukha-web-plugin/aksharamukha-v3.js?source=scriptidentifier"></script>
--->
+  <!-- 
+    🔠 Optional: Transliteration Features (currently deprecated)
 
-<!-- 🔠 Optional: Transliteration Toggle Button
-
-<script src="https://cdn.jsdelivr.net/npm/@indic-transliteration/sanscript@1.2.8/sanscript.js"></script>
-<script src="scripts/transliterate-toggle.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/virtualvinodh/aksharamukha/aksharamukha-web-plugin/aksharamukha-v3.js?source=scriptidentifier"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@indic-transliteration/sanscript@1.2.8/sanscript.js"></script>
+    <script src="scripts/transliterate-toggle.js"></script>
+  -->
 
 </body>
 </html>
