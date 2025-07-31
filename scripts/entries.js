@@ -134,9 +134,7 @@ export function renderEntries(rows) {
         statusBox.appendChild(label);
       });
 
-      subDiv.appendChild(statusBox);
-
-      // 💥 Add Clear Button
+      // 💥 Add Clear Button INSIDE the statusBox
       const clearBtn = document.createElement('button');
       clearBtn.textContent = '❌ Clear';
       clearBtn.className = 'clear-button';
@@ -159,7 +157,8 @@ export function renderEntries(rows) {
           delete entryStatuses[statusKey];
         }
       };
-      subDiv.appendChild(clearBtn);
+      statusBox.appendChild(clearBtn);
+      subDiv.appendChild(statusBox);
 
       const checked = statusBox.querySelector('input[type="radio"]:checked');
       if (checked) {
